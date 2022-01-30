@@ -37,7 +37,7 @@ public class FeedbackController {
         // Create an email instance
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setFrom(feedback.getEmail());
-        mailMessage.setTo("rc@feedback.com");
+        mailMessage.setTo("mereuta.marian@gmail.com");
         mailMessage.setSubject("New feedback from " + feedback.getName());
         mailMessage.setText(feedback.getFeedback());
 
