@@ -1,0 +1,251 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: Horaires ms
+
+servers:
+  - url: http://horaires.swagger.io/v1
+paths:
+  /horaires:
+    get:
+      summary: List all horaires
+      operationId: listHoraires
+      tags:
+        - horaires
+      responses:
+        '200':
+          description: list of horaires
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Horaires"
+        '400':
+          description: Bad request. The request was malformed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+        '404':
+          description: Not found. The requested resource did not exist
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+    post:
+      summary: Create a horaire
+      operationId: createHoraire
+      tags:
+        - horaires
+      requestBody:
+        description: create tarif with all fields and terrains
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateHoraireRequestBody'
+      responses:
+        '201':
+          description: horaire created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Horaire"
+        '400':
+          description: Bad request. The request was malformed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+        '404':
+          description: Not found. The requested resource did not exist
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    put:
+      summary: Create a horaire
+      operationId: updateHoraire
+      tags:
+        - horaires
+      requestBody:
+        description: create tarif with all fields and terrains
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateHoraireRequestBody'
+      responses:
+        '201':
+          description: horaire created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Horaire"
+        '400':
+          description: Bad request. The request was malformed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+        '404':
+          description: Not found. The requested resource did not exist
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /horaires/{horaireId}:
+    get:
+      summary: Info for a specific pet
+      operationId: showPetById
+      tags:
+        - horaires
+      parameters:
+        - name: horaireId
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/Id"
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Horaire"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+components:
+  schemas:
+
+    Error:
+      properties:
+        uuid:
+          type: string
+          example: "65adc8f3-28e5-4772-8d1f-109616b01ae8"
+        exceptionType:
+          type: string
+          example: "ResourceNotFoundException"
+        message:
+          type: string
+          example: "Error message"
+
+    Name:
+      type: string
+      example: Summer schedule
+    Id:
+      type: integer
+      format: int64
+      example: 1
+    Interval:
+      description: allow to set the time per hour or per minutes for the reservation in minutes
+      example: 30
+      type: integer
+      enum:
+        - 15
+        - 30
+        - 60
+      default: 30
+
+    Horaire:
+      type: object
+      properties:
+        horaireId:
+          $ref: "#/components/schemas/Id"
+        name:
+          $ref: "#/components/schemas/Name"
+        startTime:
+          type: string
+          pattern: (?:[01]\d|2[0123]):(?:[012345]\d)
+          example: 00:00
+        endTime:
+          type: string
+          pattern: (?:[01]\d|2[0123]):(?:[012345]\d)
+          example: 00:00
+        horaireSpecialHoraire:
+          type: string
+          format: date
+          example: 23-02-2020
+        interval:
+          $ref: "#/components/schemas/Interval"
+
+    CreateHoraireRequestBody:
+      type: object
+      required:
+        - startTime
+        - endime
+        - intervalMesure
+      properties:
+        name:
+          $ref: "#/components/schemas/Name"
+        startTime:
+          type: string
+          pattern: (?:[01]\d|2[0123]):(?:[012345]\d)
+          example: 00:00
+        endTime:
+          type: string
+          pattern: (?:[01]\d|2[0123]):(?:[012345]\d)
+          example: 00:00
+        horaireSpecialHoraire:
+          type: string
+          format: date
+          example: 23-02-2020
+        interval:
+          $ref: "#/components/schemas/Interval"
+
+    UpdateHoraireRequestBody:
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/Id"
+        name:
+          $ref: "#/components/schemas/Name"
+        startTime:
+          type: string
+          pattern: (?:[01]\d|2[0123]):(?:[012345]\d)
+          example: 00:00
+        endTime:
+          type: string
+          pattern: (?:[01]\d|2[0123]):(?:[012345]\d)
+          example: 00:00
+        horaireSpecialHoraire:
+          type: string
+          format: date
+          example: 23-02-2020
+        interval:
+          $ref: "#/components/schemas/Interval"
+
+    Horaires:
+      properties:
+        horaireList:
+          type: array
+          items:
+            $ref: "#/components/schemas/Horaire"
+
